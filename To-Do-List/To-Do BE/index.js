@@ -65,7 +65,7 @@ app.patch("/patchdata/:id", (req, res) => {
   });
 });
 
-
+ 
 app.delete(`/deletedata/:id`, (req, res) => {
   fs.readFile("./db.json", "utf-8", (err, data) => {
     if (err) res.send(err);

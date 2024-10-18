@@ -117,8 +117,8 @@ function Customer() {
   return (
     <>
       <Container fluid>
-        <div className='d-flex justify-content-around'>
-          <h1 className='text-center'>Dashboard</h1>
+        <div className='d-flex justify-content-around' >
+          <h1 className='text-center text-white'>Dashboard</h1>
           <button className='text-center btn-dark btn' onClick={() => AddDataFC()}>
             Add New Data +
           </button>
@@ -170,19 +170,21 @@ function Customer() {
         <br />
         <br />
         <br />
-        <Row>
+        <Row className='m-auto d-flex justify-content-center '>
           {data.map((el,index) => (
             <Col
               xs={12}
               sm={6}
-              md={4}
-              lg={4}
+              md={3}
+              lg={3}
               key={el.id || index}
-              className='mb-4 text-center'
+              className='mb-4 me-4  text-center text-white card'
+              style={{backgroundColor:"#15162C"}}
+
             >
-              <h3>{el.title}</h3>
               <img src={el.image} alt={el.title} height={200} width={200} />
-              <br />
+              <h6>{el.title}</h6>
+              <br /> <br />
               <Button
                 variant='outline-primary'
                 onClick={() => handleShow(el)}
@@ -196,7 +198,7 @@ function Customer() {
               >
                 Delete
               </Button>
-              <hr />
+              
             </Col>
           ))}
         </Row>
