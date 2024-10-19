@@ -6,9 +6,9 @@ function Customer() {
   const [data, setData] = useState([]);
   const [editData, setEditData] = useState({ id: '', title: '', image: '' });
   const [AddData, setAddData] = useState({ id: '', title: '', image: '' });
-
   const [show, setShow] = useState(false);
   const [AddShow, setAddShow] = useState(false);
+  const [hoveredItemId, setHoveredItemId] = useState(null); 
 
   const getData = () => {
     axios
@@ -25,20 +25,14 @@ function Customer() {
     getData();
   }, []);
 
-
-
   const handleClose = () => setShow(false);
   const AddClose = () => setAddShow(false);
 
   const AddDataFC = () => {
-    // Set the data to be edited
-    // setEditData(item);
     setAddShow(true);
-
   };
 
   const handleShow = (item) => {
-    // Set the data to be edited
     setEditData(item);
     setShow(true);
   };
@@ -53,31 +47,29 @@ function Customer() {
 
   const handleAddChange = (e) => {
     const { name, value } = e.target;
-    setAddData((prevData)=>({
+    setAddData((prevData) => ({
       ...prevData,
-      [name] :value
-    }))
+      [name]: value,
+    }));
   };
-
 
   const handleAddData = () => {
     axios
       .post('http://localhost:8000/addData', {
         id: AddData.id,
-      title: AddData.title,
-      image: AddData.image,
-
+        title: AddData.title,
+        image: AddData.image,
       })
       .then((res) => {
         console.log(res.data);
-        alert('Data Add successfully');
-        getData(); 
+        alert('Data added successfully');
+        getData();
         setAddData({ id: '', title: '', image: '' });
-        AddClose(); 
+        AddClose();
       })
       .catch((err) => {
         console.log(err);
-        alert('Data Not Add failed');
+        alert('Failed to add data');
       });
   };
 
@@ -90,12 +82,12 @@ function Customer() {
       .then((res) => {
         console.log(res.data);
         alert('Data updated successfully');
-        getData(); // Refresh the data list
-        handleClose(); // Close the modal
+        getData();
+        handleClose();
       })
       .catch((err) => {
         console.log(err);
-        alert('Data update failed');
+        alert('Failed to update data');
       });
   };
 
@@ -113,92 +105,96 @@ function Customer() {
       });
   };
 
-
   return (
     <>
       <Container fluid>
-        <div className='d-flex justify-content-around' >
+        <div className='d-flex justify-content-around'>
           <h1 className='text-center text-white'>Dashboard</h1>
           <button className='text-center btn-dark btn' onClick={() => AddDataFC()}>
-            Add New Data +
+            Add New Customer +
           </button>
 
-
           <Modal show={AddShow} onHide={AddClose} animation={true}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add Details </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-          <input
-              type='text'
-              name='id'
-              value={AddData.id}
-              onChange={handleAddChange}
-              placeholder='ID '
-              className='w-100 mb-2'
-            />
-            <input
-              type='text'
-              name='title'
-              value={AddData.title}
-              onChange={handleAddChange}
-              placeholder='Title'
-              className='w-100 mb-2'
-            />
-            <input
-              type='text'
-              name='image'
-              value={AddData.image}
-              onChange={handleAddChange}
-              placeholder='Image URL'
-              className='w-100'
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='secondary' onClick={handleClose}>
-              Close
-            </Button>
-            <Button variant='primary' onClick={handleAddData}>
-              ADD DATA
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-
-
+            <Modal.Header closeButton>
+              <Modal.Title>Add Details</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <input
+                type='text'
+                name='id'
+                value={AddData.id}
+                onChange={handleAddChange}
+                placeholder='ID'
+                className='w-100 mb-2'
+              />
+              <input
+                type='text'
+                name='title'
+                value={AddData.title}
+                onChange={handleAddChange}
+                placeholder='Title'
+                className='w-100 mb-2'
+              />
+              <input
+                type='text'
+                name='image'
+                value={AddData.image}
+                onChange={handleAddChange}
+                placeholder='Image URL'
+                className='w-100 mb-2'
+              /> 
+              <input
+                type='text'
+                name='image'
+                value={AddData.image_2}
+                onChange={handleAddChange}
+                placeholder='Car Image URL'
+                className='w-100'
+              />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant='secondary' onClick={AddClose}>
+                Close
+              </Button>
+              <Button variant='primary' onClick={handleAddData}>
+                ADD DATA
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
         <br />
         <br />
         <br />
-        <Row className='m-auto d-flex justify-content-center '>
-          {data.map((el,index) => (
+        <Row className='m-auto d-flex justify-content-center'>
+          {data.map((el, index) => (
             <Col
               xs={12}
               sm={6}
               md={3}
               lg={3}
               key={el.id || index}
-              className='mb-4 me-4  text-center text-white card'
-              style={{backgroundColor:"#15162C"}}
-
+              className='mb-4 me-4  text-white card ps-0 pe-0'
+              style={{ backgroundColor: '#15162C' }}
+              onMouseEnter={() => setHoveredItemId(el.id)}
+              onMouseLeave={() => setHoveredItemId(null)}
             >
-              <img src={el.image} alt={el.title} height={200} width={200} />
-              <h6>{el.title}</h6>
-              <br /> <br />
-              <Button
-                variant='outline-primary'
-                onClick={() => handleShow(el)}
-              >
+              <img
+                src={hoveredItemId === el.id ? el.image_2 : el.image }
+                alt={el.title}
+                height={250}
+                width={250} 
+              />
+              <br />
+              <h5>{el.title}</h5>
+              <br />
+              <p>Car: {el.car}</p>
+              <br />
+              <Button variant='outline-primary' onClick={() => handleShow(el)}>
                 Edit
               </Button>
-
-              <Button
-                variant='outline-danger'
-                onClick={() => Delete_btn(el.id)}
-              >
+              <Button variant='outline-danger' onClick={() => Delete_btn(el.id)}>
                 Delete
               </Button>
-              
             </Col>
           ))}
         </Row>

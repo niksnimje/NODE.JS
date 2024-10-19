@@ -21,7 +21,7 @@ body
     border-radius: 20px;
   }
   
-  .card h6 , Button, img {
+  .card h5 , h4,p, Button, img {
     z-index: +99;
     color: white;
     /* font-size: 2em; */
@@ -72,3 +72,5 @@ body
     border-radius: 15px;
   }
   
+
+ 

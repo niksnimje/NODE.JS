@@ -18,9 +18,9 @@ function NavBaar() {
           </Navbar.Brand>
           <Nav className="m-auto">
             
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/about">About</Nav.Link>
-            <Nav.Link href="/list">Customer List</Nav.Link>
+            <Nav.Link href="/" style={{fontSize:"25px"}}>Home</Nav.Link>
+            <Nav.Link href="/about" style={{fontSize:"25px"}}>About</Nav.Link>
+            <Nav.Link href="/list" style={{fontSize:"25px"}}>Customer List</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
