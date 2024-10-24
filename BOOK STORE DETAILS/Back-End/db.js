@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+require('dotenv').config()
 
+const MONGOURL=process.env.MONGO_URL
 
-
-    const connection =  mongoose.connect('mongodb://127.0.0.1:27017/name');
+    const connection =  mongoose.connect(MONGOURL);
     
     const bookSchema = new mongoose.Schema({
         title : String,

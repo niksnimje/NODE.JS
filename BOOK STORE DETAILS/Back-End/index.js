@@ -14,10 +14,11 @@ app.get("/",(req,res)=>{
 
 app.post('/books', async (req, res) => {
     try {
-      const { title, author, price, description,ISBN } = req.body;
+      const { title, author, price, description ,ISBN } = req.body;
       const book = new connection.BookModal({ title, author, price, description,ISBN });
 
-      await res.status(201).json(book); 
+      await book.save()
+      res.status(201).json(book); 
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -79,6 +80,8 @@ app.post('/books', async (req, res) => {
 app.listen(8000,async()=>{
     try {
         await connection
+        console.log("Data Base Connect")
+
         console.log("Run port 8000")
     } catch (error) {
         console.log(error)
