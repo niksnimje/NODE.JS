@@ -10,9 +10,9 @@ const mongoose = require('mongoose');
         price : Number,
         description : String,
         ISBN : String 
-      });
+      },{ versionKey: false });
       
-      const Book = mongoose.model('Book', bookSchema);
+      const BookModal = mongoose.model('Book', bookSchema);
 
 
-module.exports = {connection,Book} ;
+module.exports = {connection, BookModal} ;
