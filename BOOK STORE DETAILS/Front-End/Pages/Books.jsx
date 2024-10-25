@@ -2,6 +2,7 @@ import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+
 function Books() {
 
   const [Bookdata,setBookdata]=useState([])
@@ -14,7 +15,7 @@ function Books() {
 
   // get data
   const getBooksData=()=>{
-    axios.get("http://localhost:8000/getbooks")
+    axios.get("http://localhost:8000/bookRoutes/getbooks")
     .then((res)=>{
       setBookdata(res.data)
     //   console.log(res.data)
@@ -52,7 +53,7 @@ function Books() {
 
   const handleSaveChanges = (_id) => {
     axios
-      .patch(`http://localhost:8000/book/${editData._id}`, {
+      .patch(`http://localhost:8000/bookRoutes/book/${editData._id}`, {
         title: editData.title,
         author: editData.author,
         image: editData.image,
@@ -75,7 +76,7 @@ function Books() {
 
   const handleAddData = () => {
     axios
-      .post('http://localhost:8000/addbooks', {
+      .post('http://localhost:8000/bookRoutes/addbooks', {
         
         title: AddData.title,
         image: AddData.image,
@@ -106,7 +107,7 @@ function Books() {
 
   const BookDelete=(_id)=>{
     
-    axios.delete(`http://localhost:8000/book/${_id}`)
+    axios.delete(`http://localhost:8000/bookRoutes/book/${_id}`)
     .then((res)=>{
       alert("product delete Successfully")
 
@@ -120,7 +121,7 @@ function Books() {
 
   return (
     <>
-      <div className="container mt-1  text-center text-light">
+      <div className="container mt-1  text-center text-light ">
       <h3>
         All Book's List
       </h3>
