@@ -10,7 +10,8 @@ const MONGOURL=process.env.MONGO_URL
         author : String,
         price : Number,
         description : String,
-        ISBN : String 
+        ISBN : String, 
+        image: String
       },{ versionKey: false });
       
       const BookModal = mongoose.model('Book', bookSchema);

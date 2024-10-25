@@ -1,4 +1,3 @@
-
 import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -6,16 +5,19 @@ import axios from 'axios';
 function Books() {
 
   const [Bookdata,setBookdata]=useState([])
-  const [AddData, setAddData] = useState({ id: '', title: '', image: '', price: '' });
+  const [AddData, setAddData] = useState({ _id: '', title: '', image: '', price: '',description:'',author:'' });
+
   const [AddShow, setAddShow] = useState(false);
-  const [editData, setEditData] = useState({ id: '', title: '', image: '' });
+  const [editData, setEditData] = useState({  title: '', image: '', author:'',price:'' });
   const [show, setShow] = useState(false);
 
 
+  // get data
   const getBooksData=()=>{
-    axios.get("https://fakestoreapi.com/products")
+    axios.get("http://localhost:8000/getbooks")
     .then((res)=>{
       setBookdata(res.data)
+    //   console.log(res.data)
     })
     .catch((err)=>{
       console.log(err)
@@ -33,6 +35,8 @@ function Books() {
     setAddShow(true);
   };
 
+
+  // Upadate Books
   const handleShow = (item) => {
     setEditData(item);
     setShow(true);
@@ -46,10 +50,11 @@ function Books() {
     }));
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = (_id) => {
     axios
-      .patch(`https://fakestoreapi.com/products/${editData.id}`, {
+      .patch(`http://localhost:8000/book/${editData._id}`, {
         title: editData.title,
+        author: editData.author,
         image: editData.image,
         price: editData.price,
       })
@@ -66,18 +71,22 @@ function Books() {
   };
 
 
+  // Add Books
+
   const handleAddData = () => {
     axios
-      .post('https://fakestoreapi.com/products', {
-        id: AddData.id,
+      .post('http://localhost:8000/addbooks', {
+        
         title: AddData.title,
         image: AddData.image,
         price: AddData.price,
+        description: AddData.description,
+        author: AddData.author,
       })
       .then((res) => {
         console.log(res.data);
         alert('Data added successfully');
-        setAddData({ id:'',  title: '', image: '',price: '' });
+        setAddData({   title: '', image: '',price: '',author:'',description:'' });
         getBooksData();
         AddClose();
       })
@@ -95,12 +104,13 @@ function Books() {
     }));
   };
 
-  const BookDelete=(id)=>{
-    axios.delete(`https://fakestoreapi.com/products/${id}`)
+  const BookDelete=(_id)=>{
+    
+    axios.delete(`http://localhost:8000/book/${_id}`)
     .then((res)=>{
       alert("product delete Successfully")
 
-      setBookdata(Bookdata.filter((item) => item.id !== id));
+      setBookdata(Bookdata.filter((item) => item._id !== _id));
     })
     .catch((err)=>{
       console.log(err)
@@ -115,7 +125,7 @@ function Books() {
         All Book's List
       </h3>
 
-      <div className='d-flex justify-content-around'>
+      <div className='d-flex justify-content-around mb-4'>
           <h1 className='text-center text-white'>Dashboard</h1>
           <button className='text-center btn-dark btn' onClick={() => AddDataFC()}>
             Add New Book +
@@ -127,14 +137,7 @@ function Books() {
             </Modal.Header>
             <Modal.Body>
               
-            <input
-                type='text'
-                name='id'
-                value={AddData.id}
-                onChange={handleAddChange}
-                placeholder='ID'
-                className='w-100 mb-2'
-              />
+            
 
               <input
                 type='text'
@@ -142,6 +145,22 @@ function Books() {
                 value={AddData.title}
                 onChange={handleAddChange}
                 placeholder='Title'
+                className='w-100 mb-2'
+              />
+              <input
+                type='text'
+                name='author'
+                value={AddData.author}
+                onChange={handleAddChange}
+                placeholder='author'
+                className='w-100 mb-2'
+              />
+              <input
+                type='text'
+                name='description'
+                value={AddData.description}
+                onChange={handleAddChange}
+                placeholder='description'
                 className='w-100 mb-2'
               />
               <input
@@ -175,6 +194,7 @@ function Books() {
 
 
         </div>
+
         <Row className='m-auto d-flex justify-content-center'>
         {
           Bookdata.map((el)=>(
@@ -183,29 +203,33 @@ function Books() {
               sm={6}
               md={3}
               lg={3}
-              key={el.id || index}
+              key={el._id}
               className='mb-4 me-4  text-white  ps-0 pe-0'
               style={{ backgroundColor: '#15162C' }}
             >
-              <img
-                src={el.image }
+              <img src={el.image }
                 alt={el.title}
-                height={250}
+                height={320}
                 width={250} 
               />
               <br />
               <h5>{el.title}</h5>
-              <br />
-              <p>Price {el.price}</p>
-              <br />
-              <Button variant='outline-primary' onClick={() => handleShow(el)}>
-                Edit
-              </Button>
-              <Button variant='outline-danger' onClick={()=>BookDelete(el.id)}>
-                Delete
-              </Button>
+              <h6>Author:- {el.author}</h6>
+              
+              <p>Price :- ₹{el.price}</p>
+              
+             <div className='mb-3'>
+             <Button  variant='outline-primary' onClick={() => handleShow(el)}>
+             Edit
+           </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+           <Button  variant='outline-danger' onClick={()=>BookDelete(el._id)}>
+             Delete
+           </Button>
+             </div>
+              
             </Col>
           ))}
+
           </Row>
 
              {/* Modal for editing */}
@@ -220,6 +244,14 @@ function Books() {
               value={editData.title}
               onChange={handleChange}
               placeholder='Title'
+              className='w-100 mb-2'
+            />
+            <input
+              type='text'
+              name='author'
+              value={editData.author}
+              onChange={handleChange}
+              placeholder='author'
               className='w-100 mb-2'
             />
             <input
